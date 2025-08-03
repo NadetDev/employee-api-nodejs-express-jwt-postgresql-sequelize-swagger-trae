@@ -122,7 +122,7 @@ exports.deleteEmployee = async (req, res) => {
     // Supprimer l'employé
     await employee.destroy();
 
-    res.status(200).json({ message: 'Employé supprimé avec succès' });
+    res.status(204).send();
   } catch (error) {
     console.error('Erreur lors de la suppression de l\'employé:', error);
     res.status(500).json({ message: 'Erreur lors de la suppression de l\'employé' });

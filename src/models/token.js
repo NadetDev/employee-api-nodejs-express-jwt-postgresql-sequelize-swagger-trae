@@ -1,5 +1,38 @@
 'use strict';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Token:
+ *       type: object
+ *       required:
+ *         - token
+ *         - userId
+ *         - expiresAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID auto-généré du token
+ *         token:
+ *           type: string
+ *           description: Valeur unique du token JWT
+ *         userId:
+ *           type: integer
+ *           description: ID de l'utilisateur associé au token
+ *         expiresAt:
+ *           type: string
+ *           format: date-time
+ *           description: Date d'expiration du token
+ *         blacklisted:
+ *           type: boolean
+ *           description: Indique si le token est sur liste noire (invalide)
+ *       example:
+ *         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         userId: 1
+ *         expiresAt: 2023-08-04T12:00:00.000Z
+ *         blacklisted: false
+ */
 module.exports = (sequelize, DataTypes) => {
   const Token = sequelize.define('Token', {
     id: {

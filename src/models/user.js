@@ -1,6 +1,45 @@
 'use strict';
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - email
+ *         - password
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID auto-généré de l'utilisateur
+ *         username:
+ *           type: string
+ *           description: Nom d'utilisateur unique
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email unique de l'utilisateur
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Mot de passe de l'utilisateur (haché)
+ *         role:
+ *           type: string
+ *           enum: [admin, staff]
+ *           description: Rôle de l'utilisateur
+ *         active:
+ *           type: boolean
+ *           description: Statut d'activation du compte
+ *       example:
+ *         username: utilisateur
+ *         email: utilisateur@example.com
+ *         password: motdepasse123
+ *         role: staff
+ *         active: true
+ */
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {

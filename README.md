@@ -9,13 +9,21 @@ Une API RESTful pour la gestion des employés, construite avec Express.js, Postg
 - Gestion des employés (CRUD)
 - Déconnexion avec invalidation des tokens
 - Expiration des tokens après 24h
+- Documentation interactive avec Swagger
 
 ## Prérequis
 
+### Pour l'installation locale
 - Node.js (v14 ou supérieur)
-- PostgreSQL
+- PostgreSQL (v12 ou supérieur)
+
+### Pour l'installation avec Docker
+- Docker
+- Docker Compose
 
 ## Installation
+
+### Option 1 : Installation locale
 
 1. Cloner le dépôt
 
@@ -32,7 +40,17 @@ npm install
 
 3. Configurer les variables d'environnement
 
-Créez un fichier `.env` à la racine du projet avec les variables suivantes :
+Copiez le fichier `.env.example` en `.env` et modifiez les valeurs selon votre environnement :
+
+```bash
+cp .env.example .env
+```
+
+Modifiez le fichier `.env` avec vos propres valeurs, notamment :
+- Les informations de connexion à la base de données
+- Un secret JWT sécurisé
+
+Exemple de contenu du fichier `.env` :
 
 ```
 NODE_ENV=development
@@ -63,6 +81,185 @@ npm run dev
 ```
 
 Le serveur sera accessible à l'adresse http://localhost:3000
+
+### Option 2 : Installation avec Docker
+
+1. Cloner le dépôt
+
+```bash
+git clone <url-du-depot>
+cd <nom-du-dossier>
+```
+
+2. Démarrer les conteneurs avec Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+Cette commande va :
+- Construire l'image Docker de l'application
+- Démarrer un conteneur PostgreSQL
+- Exécuter automatiquement les migrations et les seeders
+- Démarrer l'application sur le port 3000
+
+Le serveur sera accessible à l'adresse http://localhost:3000
+
+3. Arrêter les conteneurs
+
+```bash
+docker-compose down
+```
+
+Pour supprimer également les volumes (données de la base de données) :
+
+```bash
+docker-compose down -v
+```
+
+## Configuration Docker
+
+L'application est conteneurisée avec Docker pour faciliter le déploiement et le développement. Voici les fichiers Docker inclus :
+
+### Dockerfile
+
+Le `Dockerfile` définit l'image de l'application :
+- Basée sur Node.js 18 Alpine pour une image légère
+- Installation des dépendances PostgreSQL client pour les migrations
+- Script d'entrée pour attendre que la base de données soit prête
+- Configuration pour exécuter automatiquement les migrations et seeders
+
+### docker-compose.yml
+
+Le fichier `docker-compose.yml` orchestre les services :
+
+- **Service app** :
+  - Construction à partir du Dockerfile local
+  - Exposition du port 3000
+  - Variables d'environnement préconfigurées
+  - Vérifications de santé pour assurer la disponibilité
+  - Dépendance sur le service de base de données
+
+- **Service db** :
+  - Image PostgreSQL 14 Alpine
+  - Exposition du port 5432
+  - Volume persistant pour les données
+  - Vérifications de santé pour assurer la disponibilité
+
+### docker-entrypoint.sh
+
+Script d'initialisation qui :
+- Attend que PostgreSQL soit prêt
+- Exécute les migrations de base de données
+- Exécute les seeders pour créer l'utilisateur admin par défaut
+- Démarre l'application
+
+### .dockerignore
+
+Exclut les fichiers inutiles lors de la construction de l'image Docker pour optimiser la taille et la sécurité.
+
+## Déploiement
+
+Un script de déploiement `deploy.sh` est fourni pour faciliter le déploiement de l'application en production :
+
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+Ce script effectue les opérations suivantes :
+1. Vérifie que Docker et Docker Compose sont installés
+2. Arrête les conteneurs existants
+3. Récupère les dernières modifications du dépôt Git
+4. Reconstruit les images Docker sans utiliser le cache
+5. Démarre les conteneurs en mode détaché
+6. Vérifie que les conteneurs sont en cours d'exécution
+
+Ce script est particulièrement utile pour les déploiements automatisés ou les mises à jour rapides de l'application.
+
+## Qualité du code
+
+### Linting avec ESLint
+
+Le projet utilise ESLint pour maintenir un style de code cohérent et détecter les erreurs potentielles.
+
+Pour exécuter ESLint :
+
+```bash
+npm run lint
+```
+
+Pour corriger automatiquement les problèmes détectés :
+
+```bash
+npm run lint:fix
+```
+
+La configuration d'ESLint est définie dans le fichier `.eslintrc.js` à la racine du projet.
+
+## Tests
+
+L'application inclut des tests unitaires et d'intégration pour garantir la qualité du code et le bon fonctionnement des fonctionnalités.
+
+### Exécution des tests
+
+Pour exécuter tous les tests :
+
+```bash
+npm test
+```
+
+Pour exécuter les tests en mode watch (utile pendant le développement) :
+
+```bash
+npm run test:watch
+```
+
+Pour générer un rapport de couverture de code :
+
+```bash
+npm run test:coverage
+```
+
+### Structure des tests
+
+Les tests sont organisés dans le répertoire `__tests__` avec la structure suivante :
+
+- `__tests__/models/` : Tests unitaires pour les modèles Sequelize
+- `__tests__/routes/` : Tests d'intégration pour les routes API
+
+### Configuration de Jest
+
+La configuration des tests est définie dans le fichier `jest.config.js` à la racine du projet.
+
+## Documentation de l'API avec Swagger
+
+L'API est documentée avec Swagger, ce qui permet d'explorer et de tester facilement les endpoints disponibles.
+
+### Accès à la documentation
+
+Une fois le serveur démarré, vous pouvez accéder à l'interface Swagger à l'adresse suivante :
+
+```
+http://localhost:3000/api-docs
+```
+
+### Fonctionnalités de Swagger UI
+
+- **Documentation interactive** : Explorez tous les endpoints de l'API avec leurs paramètres, corps de requête et réponses.
+- **Test des endpoints** : Testez directement les endpoints depuis l'interface Swagger.
+- **Authentification** : Utilisez le bouton "Authorize" pour vous authentifier avec un token JWT.
+
+### Authentification
+
+Pour tester les endpoints protégés :
+
+1. Connectez-vous via l'endpoint `/api/auth/login` pour obtenir un token JWT.
+2. Cliquez sur le bouton "Authorize" en haut de la page Swagger UI.
+3. Entrez votre token au format `Bearer votre_token_jwt`.
+4. Cliquez sur "Authorize" puis fermez la fenêtre.
+
+Vous pouvez maintenant tester tous les endpoints protégés.
 
 ## Utilisation de l'API
 

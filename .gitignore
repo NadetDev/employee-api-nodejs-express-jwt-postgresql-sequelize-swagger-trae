@@ -35,3 +35,16 @@ coverage/
 # Fichiers temporaires
 tmp/
 temp/
+.tmp/
+
+# Fichiers de base de données SQLite (si utilisés pour les tests)
+*.sqlite
+*.sqlite3
+
+# Fichiers de verrouillage de dépendances (optionnel, selon la politique du projet)
+# package-lock.json
+# yarn.lock
+
+# Fichiers de sauvegarde
+*.bak
+*~
