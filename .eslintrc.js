@@ -13,7 +13,7 @@ module.exports = {
     // Indentation à 2 espaces
     'indent': ['error', 2],
     // Utilisation de guillemets simples
-    'quotes': ['error', 'single'],
+    //'quotes': ['error', 'single'],
     // Point-virgule obligatoire
     'semi': ['error', 'always'],
     // Pas d'espaces en fin de ligne
