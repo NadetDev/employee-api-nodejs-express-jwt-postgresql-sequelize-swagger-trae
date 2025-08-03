@@ -21,6 +21,10 @@ Une API RESTful pour la gestion des employés, construite avec Express.js, Postg
 - Docker
 - Docker Compose
 
+### Pour le déploiement sur Kubernetes
+- Minikube
+- kubectl
+
 ## Installation
 
 ### Option 1 : Installation locale
@@ -160,6 +164,8 @@ Exclut les fichiers inutiles lors de la construction de l'image Docker pour opti
 
 ## Déploiement
 
+### Déploiement manuel avec Docker
+
 Un script de déploiement `deploy.sh` est fourni pour faciliter le déploiement de l'application en production :
 
 ```bash
@@ -176,6 +182,54 @@ Ce script effectue les opérations suivantes :
 6. Vérifie que les conteneurs sont en cours d'exécution
 
 Ce script est particulièrement utile pour les déploiements automatisés ou les mises à jour rapides de l'application.
+
+### CI/CD avec GitHub Actions
+
+Ce projet utilise GitHub Actions pour l'intégration continue et le déploiement continu.
+
+#### Workflows disponibles
+
+1. **Build and Test** (`.github/workflows/build-test.yml`)
+   - Déclenché sur les push et pull requests vers main, master et develop
+   - Exécute les tests et le linting
+
+2. **Create Release** (`.github/workflows/release.yml`)
+   - Déclenché après le succès du workflow "Build and Test" sur main ou master
+   - Crée une release GitHub basée sur la version dans package.json
+
+3. **Build and Push Docker Image** (`.github/workflows/docker-build.yml`)
+   - Déclenché lors de la création d'une release
+   - Construit et publie l'image Docker sur GitHub Container Registry
+
+4. **Deploy to Minikube** (`.github/workflows/deploy-minikube.yml`)
+   - Déclenché après le succès du workflow "Build and Push Docker Image"
+   - Déploie l'application sur Minikube
+
+### Déploiement sur Kubernetes (Minikube)
+
+#### Déploiement manuel
+
+```bash
+# Sur Linux/macOS
+./deploy-minikube.sh
+
+# Sur Windows
+.\deploy-minikube.ps1
+```
+
+Ces scripts vont :
+1. Démarrer Minikube si nécessaire
+2. Créer le namespace `employee-api`
+3. Créer les secrets nécessaires
+4. Déployer l'application et la base de données
+5. Afficher l'URL d'accès
+
+#### Structure des fichiers Kubernetes
+
+- `k8s/deployment.yaml` : Déploiement de l'API
+- `k8s/service.yaml` : Service pour exposer l'API
+- `k8s/postgres.yaml` : Déploiement de PostgreSQL avec PVC
+- `k8s/ingress.yaml` : Ingress pour accéder à l'API via un nom d'hôte
 
 ## Qualité du code
 
