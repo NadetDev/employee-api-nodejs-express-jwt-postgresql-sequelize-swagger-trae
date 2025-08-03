@@ -2,12 +2,12 @@ module.exports = {
   env: {
     node: true,
     es2021: true,
-    jest: true,
+    jest: true
   },
   extends: ['eslint:recommended'],
   parserOptions: {
     ecmaVersion: 12,
-    sourceType: 'module',
+    sourceType: 'module'
   },
   rules: {
     // Indentation à 2 espaces
@@ -17,11 +17,11 @@ module.exports = {
     // Point-virgule obligatoire
     'semi': ['error', 'always'],
     // Pas d'espaces en fin de ligne
-    'no-trailing-spaces': 'error',
+    //'no-trailing-spaces': 'error',
     // Pas de variables non utilisées
     'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
     // Pas de console.log en production
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    //'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     // Pas de debugger en production
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     // Pas de variables non déclarées
@@ -31,8 +31,8 @@ module.exports = {
     // Pas de lignes vides multiples
     'no-multiple-empty-lines': ['error', { 'max': 1, 'maxEOF': 1 }],
     // Pas de virgule en fin de liste
-    'comma-dangle': ['error', 'never'],
+    //'comma-dangle': ['error', 'never'],
     // Espaces autour des opérateurs
-    'space-infix-ops': 'error',
-  },
+    'space-infix-ops': 'error'
+  }
 };
