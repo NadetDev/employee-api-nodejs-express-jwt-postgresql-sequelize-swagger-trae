@@ -33,10 +33,10 @@ describe('User Model', () => {
     expect(user.email).toBe(userData.email);
     expect(user.role).toBe(userData.role);
     expect(user.active).toBe(userData.active);
-    
+
     // Vérifier que le mot de passe a été haché
     expect(user.password).not.toBe(userData.password);
-    
+
     // Vérifier que le mot de passe haché est valide
     const isPasswordValid = await bcrypt.compare(userData.password, user.password);
     expect(isPasswordValid).toBe(true);
@@ -114,11 +114,11 @@ describe('User Model', () => {
     // Vérifier que les données ont été mises à jour
     expect(user.username).toBe(newData.username);
     expect(user.role).toBe(newData.role);
-    
+
     // Vérifier que le mot de passe a été mis à jour et haché
     const isNewPasswordValid = await bcrypt.compare(newData.password, user.password);
     expect(isNewPasswordValid).toBe(true);
-    
+
     // Vérifier que l'ancien mot de passe n'est plus valide
     const isOldPasswordValid = await bcrypt.compare('Password123!', user.password);
     expect(isOldPasswordValid).toBe(false);
