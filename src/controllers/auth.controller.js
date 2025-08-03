@@ -1,5 +1,6 @@
-const { User } = require('../models');
+const { User, Sequelize } = require('../models');
 const { generateToken, blacklistToken } = require('../utils/jwt.utils');
+const { Op } = Sequelize;
 
 /**
  * Inscription d'un nouvel utilisateur
@@ -13,7 +14,7 @@ exports.register = async (req, res) => {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await User.findOne({
       where: {
-        [User.sequelize.Op.or]: [{ username }, { email }]
+        [Op.or]: [{ username }, { email }]
       }
     });
 

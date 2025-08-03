@@ -23,6 +23,11 @@ app.use('/api-docs', swagger.serve, swagger.setup);
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 
+// Route de santé pour les healthchecks
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Route de base
 app.get('/', (req, res) => {
   res.json({ 
